@@ -2,6 +2,9 @@ import { InvalidPizzaError, PizzaSize, CreateOrderDTO, Order } from "../types/ty
 
 export class OrderService {
 
+    private orders: Map<string, Order> = new Map();
+    private idCounter = 1;
+
     calculatePrice(size: PizzaSize, toppings: string[]): number {
         if (toppings.length > 5) {
             throw new InvalidPizzaError('Maximum 5 toppings allowed');
@@ -17,6 +20,19 @@ export class OrderService {
     }
 
     createOrder(dto: CreateOrderDTO): Order {
-        return {} as Order;
+        const totalPrice = dto.items.reduce((sum, item) => {
+            return sum + this.calculatePrice(item.size, item.toppings);
+        }, 0);
+
+        const order: Order = {
+            id: `ORDER-${this.idCounter++}`,
+            items: dto.items,
+            address: dto.address,
+            totalPrice,
+            createdAt: new Date()
+        };
+
+        this.orders.set(order.id, order);
+        return order;
     }
 }
