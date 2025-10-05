@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import { OrderService } from './order.service';
+import { InvalidPizzaError } from '../types/types';
 
 describe('OrderService - calculatePrice', () => {
     let service: OrderService;
@@ -26,5 +27,11 @@ describe('OrderService - calculatePrice', () => {
     test('debería agregar $2 por cada topping', () => {
         const price = service.calculatePrice('M', ['cheese', 'pepperoni']);
         expect(price).toBe(19); // 15 + 4
+    });
+
+    test('debería rechazar más de 5 toppings', () => {
+        expect(() => {
+            service.calculatePrice('L', ['t1', 't2', 't3', 't4', 't5', 't6']);
+        }).toThrow(InvalidPizzaError);
     });
 });
