@@ -22,4 +22,9 @@ describe('OrderService - calculatePrice', () => {
         const price = service.calculatePrice('L', []);
         expect(price).toBe(20);
     });
+
+    test('debería agregar $2 por cada topping', () => {
+        const price = service.calculatePrice('M', ['cheese', 'pepperoni']);
+        expect(price).toBe(19); // 15 + 4
+    });
 });
