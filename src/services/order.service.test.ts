@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import { OrderService } from './order.service';
-import { InvalidPizzaError } from '../types/types';
+import { InvalidPizzaError, CreateOrderDTO, Order } from '../types/types';
 
 describe('OrderService - calculatePrice', () => {
     let service: OrderService;
@@ -33,5 +33,40 @@ describe('OrderService - calculatePrice', () => {
         expect(() => {
             service.calculatePrice('L', ['t1', 't2', 't3', 't4', 't5', 't6']);
         }).toThrow(InvalidPizzaError);
+    });
+
+    describe('OrderService - createOrder', () => {
+        let service: OrderService;
+
+        beforeEach(() => {
+            service = new OrderService();
+        });
+
+        test('debería crear orden con ID único', () => {
+            const order1 = service.createOrder({
+                items: [{ size: 'M', toppings: [] }],
+                address: '123 Main Street'
+            });
+            const order2 = service.createOrder({
+                items: [{ size: 'S', toppings: [] }],
+                address: '456 Oak Avenue'
+            });
+
+            expect(order1.id).toBeDefined();
+            expect(order2.id).toBeDefined();
+            expect(order1.id).not.toBe(order2.id);
+        });
+
+        test('debería calcular precio total correcto', () => {
+            const order = service.createOrder({
+                items: [
+                    { size: 'M', toppings: ['cheese'] },
+                    { size: 'L', toppings: [] }
+                ],
+                address: '123 Main Street'
+            });
+
+            expect(order.totalPrice).toBe(37); // (15+2) + 20
+        });
     });
 });
