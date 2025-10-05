@@ -1,16 +1,17 @@
-import { PizzaSize } from "../types/types";
+import { InvalidPizzaError, PizzaSize } from "../types/types";
 
 export class OrderService {
     calculatePrice(size: PizzaSize, toppings: string[]): number {
+        if (toppings.length > 5) {
+            throw new InvalidPizzaError('Maximum 5 toppings allowed');
+        }
+
         const basePrices: Record<PizzaSize, number> = {
             S: 10,
             M: 15,
             L: 20
         };
 
-        const basePrice = basePrices[size];
-        const toppingsPrice = toppings.length * 2;
-
-        return basePrice + toppingsPrice;
+        return basePrices[size] + (toppings.length * 2);
     }
 }
