@@ -7,6 +7,10 @@ export class OrderService {
             M: 15,
             L: 20
         };
-        return basePrices[size];
+
+        const basePrice = basePrices[size];
+        const toppingsPrice = toppings.length * 2;
+
+        return basePrice + toppingsPrice;
     }
 }
