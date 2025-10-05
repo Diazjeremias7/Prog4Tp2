@@ -12,4 +12,14 @@ describe('OrderService - calculatePrice', () => {
         const price = service.calculatePrice('S', []);
         expect(price).toBe(10);
     });
+
+    test('debería calcular precio para pizza M', () => {
+        const price = service.calculatePrice('M', []);
+        expect(price).toBe(15);
+    });
+
+    test('debería calcular precio para pizza L', () => {
+        const price = service.calculatePrice('L', []);
+        expect(price).toBe(20);
+    });
 });
