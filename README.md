@@ -695,7 +695,7 @@ Se eligió Vitest sobre Jest por:
 
 ---
 
-## 🔧 Scripts npm Disponibles
+## 🔧Scripts npm Disponibles
 
 ```json
 {
