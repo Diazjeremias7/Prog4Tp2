@@ -1,6 +1,9 @@
-import { InvalidPizzaError, PizzaSize, CreateOrderDTO, Order } from "../types/types";
+import { InvalidPizzaError, PizzaSize, CreateOrderDTO, Order, OrderNotFoundError } from "../types/types";
 
 export class OrderService {
+    getOrders(): Order[] {
+        return Array.from(this.orders.values());
+    }
 
     private orders: Map<string, Order> = new Map();
     private idCounter = 1;
@@ -17,6 +20,14 @@ export class OrderService {
         };
 
         return basePrices[size] + (toppings.length * 2);
+    }
+
+    getOrder(id: string): Order {
+        const order = this.orders.get(id);
+        if (!order) {
+            throw new OrderNotFoundError(`Order with id ${id} not found`);
+        }
+        return order;
     }
 
     createOrder(dto: CreateOrderDTO): Order {
@@ -36,3 +47,5 @@ export class OrderService {
         return order;
     }
 }
+
+    
