@@ -1,6 +1,9 @@
 import { InvalidPizzaError, PizzaSize, CreateOrderDTO, Order, OrderNotFoundError } from "../types/types";
 
 export class OrderService {
+    getOrders(): Order[] {
+        return Array.from(this.orders.values());
+    }
 
     private orders: Map<string, Order> = new Map();
     private idCounter = 1;
@@ -44,3 +47,5 @@ export class OrderService {
         return order;
     }
 }
+
+    
