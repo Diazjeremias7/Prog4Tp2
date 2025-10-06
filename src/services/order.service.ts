@@ -1,4 +1,4 @@
-import { InvalidPizzaError, PizzaSize, CreateOrderDTO, Order } from "../types/types";
+import { InvalidPizzaError, PizzaSize, CreateOrderDTO, Order, OrderNotFoundError } from "../types/types";
 
 export class OrderService {
 
@@ -17,6 +17,14 @@ export class OrderService {
         };
 
         return basePrices[size] + (toppings.length * 2);
+    }
+
+    getOrder(id: string): Order {
+        const order = this.orders.get(id);
+        if (!order) {
+            throw new OrderNotFoundError(`Order with id ${id} not found`);
+        }
+        return order;
     }
 
     createOrder(dto: CreateOrderDTO): Order {

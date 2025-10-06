@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
+import { OrderNotFoundError } from '../types/types';
 import { OrderService } from './order.service';
 import { InvalidPizzaError, CreateOrderDTO, Order } from '../types/types';
 
@@ -68,5 +69,29 @@ describe('OrderService - calculatePrice', () => {
 
             expect(order.totalPrice).toBe(37); // (15+2) + 20
         });
+    });
+});
+
+describe('OrderService - getOrder', () => {
+    let service: OrderService;
+
+    beforeEach(() => {
+        service = new OrderService();
+    });
+
+    test('debería retornar orden existente', () => {
+        const created = service.createOrder({
+            items: [{ size: 'M', toppings: [] }],
+            address: '123 Main Street'
+        });
+
+        const retrieved = service.getOrder(created.id);
+        expect(retrieved).toEqual(created);
+    });
+
+    test('debería lanzar error si no existe', () => {
+        expect(() => {
+            service.getOrder('invalid');
+        }).toThrow(OrderNotFoundError);
     });
 });
