@@ -95,3 +95,30 @@ describe('OrderService - getOrder', () => {
         }).toThrow(OrderNotFoundError);
     });
 });
+
+describe('OrderService - getOrders', () => {
+  let service: OrderService;
+
+  beforeEach(() => {
+    service = new OrderService();
+  });
+
+  test('debería retornar todas las órdenes', () => {
+    service.createOrder({
+      items: [{ size: 'M', toppings: [] }],
+      address: '123 Main Street'
+    });
+    service.createOrder({
+      items: [{ size: 'L', toppings: [] }],
+      address: '456 Oak Avenue'
+    });
+
+    const orders = service.getOrders();
+    expect(orders).toHaveLength(2);
+  });
+
+  test('debería retornar array vacío si no hay órdenes', () => {
+    const orders = service.getOrders();
+    expect(orders).toHaveLength(0);
+  });
+});
