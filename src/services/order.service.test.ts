@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
+import { OrderNotFoundError } from '../types/types';
 import { OrderService } from './order.service';
 import { InvalidPizzaError, CreateOrderDTO, Order } from '../types/types';
 
@@ -69,4 +70,55 @@ describe('OrderService - calculatePrice', () => {
             expect(order.totalPrice).toBe(37); // (15+2) + 20
         });
     });
+});
+
+describe('OrderService - getOrder', () => {
+    let service: OrderService;
+
+    beforeEach(() => {
+        service = new OrderService();
+    });
+
+    test('debería retornar orden existente', () => {
+        const created = service.createOrder({
+            items: [{ size: 'M', toppings: [] }],
+            address: '123 Main Street'
+        });
+
+        const retrieved = service.getOrder(created.id);
+        expect(retrieved).toEqual(created);
+    });
+
+    test('debería lanzar error si no existe', () => {
+        expect(() => {
+            service.getOrder('invalid');
+        }).toThrow(OrderNotFoundError);
+    });
+});
+
+describe('OrderService - getOrders', () => {
+  let service: OrderService;
+
+  beforeEach(() => {
+    service = new OrderService();
+  });
+
+  test('debería retornar todas las órdenes', () => {
+    service.createOrder({
+      items: [{ size: 'M', toppings: [] }],
+      address: '123 Main Street'
+    });
+    service.createOrder({
+      items: [{ size: 'L', toppings: [] }],
+      address: '456 Oak Avenue'
+    });
+
+    const orders = service.getOrders();
+    expect(orders).toHaveLength(2);
+  });
+
+  test('debería retornar array vacío si no hay órdenes', () => {
+    const orders = service.getOrders();
+    expect(orders).toHaveLength(0);
+  });
 });
