@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { OrderService } from './services/order.service';
-import { createOrderSchema } from './schemas';
-import { OrderNotFoundError, InvalidPizzaError } from './types';
+import { createOrderSchema } from './schemas/schemas';
+import { OrderNotFoundError, InvalidPizzaError } from './types/types';
 
 export const makeApp = (orderService?: OrderService) => {
   const app = express();
